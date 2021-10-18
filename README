@@ -1,0 +1,2 @@
+docker build -t pubsub .
+docker run --rm -it --name pubsub -p 8082:8082 --detach pubsub
