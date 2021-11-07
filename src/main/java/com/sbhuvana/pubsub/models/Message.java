@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Message {
+    public String id;
     protected String title;
     protected String content;
     protected String source;
@@ -45,5 +46,13 @@ public class Message {
 
     public List<String> getTopics() {
         return topics;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

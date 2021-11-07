@@ -1,5 +1,5 @@
 package com.sbhuvana.pubsub.models;
 
 public enum MessageEvent {
-    SUBSCRIBE,UNSUBSCRIBE
+    SUBSCRIBE, UNSUBSCRIBE, ADVERTISE
 }

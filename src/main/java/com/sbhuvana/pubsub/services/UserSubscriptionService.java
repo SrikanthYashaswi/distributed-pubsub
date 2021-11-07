@@ -1,5 +1,6 @@
 package com.sbhuvana.pubsub.services;
 
+import com.sbhuvana.pubsub.config.NetworkConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,23 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
-public class SubscriptionService {
-    private final Logger logger = LoggerFactory.getLogger(SubscriptionService.class);
+public class UserSubscriptionService {
+    private final Logger logger = LoggerFactory.getLogger(UserSubscriptionService.class);
     private final Map<String, List<WebSocketSession>> subscriptions = new HashMap<>();
+    private final NetworkConfig networkConfig;
+    private final SubscriptionRoutingService subscriptionRoutingService;
+
+    public UserSubscriptionService(NetworkConfig networkConfig, SubscriptionRoutingService subscriptionRoutingService) {
+        this.networkConfig = networkConfig;
+        this.subscriptionRoutingService = subscriptionRoutingService;
+    }
 
     public void subscribe(WebSocketSession webSocketSession, String topic) {
         subscriptions.computeIfAbsent(topic, t -> new CopyOnWriteArrayList<>());
         subscriptions.get(topic).add(webSocketSession);
+        if (!this.networkConfig.getBrokerServingTopics().contains(topic)) {
+            this.subscriptionRoutingService.forwardSubscriptionEvent(topic);
+        }
     }
 
     public void unSubscribe(String userId, String topic) {
@@ -40,7 +51,6 @@ public class SubscriptionService {
             } catch (IOException ex) {
                 this.logger.error("Cant send message to [{}] as connection might be closed", subscriber.getId());
             }
-
         }
     }
 }
