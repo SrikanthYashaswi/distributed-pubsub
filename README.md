@@ -1,3 +1,11 @@
+# Distributed PubSub
+This is a project done as a part of Distributed Systems course at UB.
+
+It follows rendezvous-based event routing between nodes.
+
+Docker is used for orchestration.
+
+# How to start the application
 docker build -t pubsub .
 docker run --rm -it --name broker1 -h broker1 -p 8082:8082 --network=backendBridge -e NETWORK_NEIGHBOURS=broker2,broker3  pubsub
 
